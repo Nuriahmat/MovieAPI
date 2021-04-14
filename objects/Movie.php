@@ -19,10 +19,18 @@ class Movie
     /**
      * List of movies
      */
-    public function list()
+    public function list($keyword)
     {
         $query = 'select * from ' . $this->tb_name;
-        $stmt = $this->connection->prepare($query);
+        // search by name 
+        if (!empty($keyword)) {
+            $keyword = '%'.$keyword.'%';
+            $query = $query . ' where name like :keyword';
+            $stmt = $this->connection->prepare($query);
+            $stmt->bindParam(':keyword', $keyword, PDO::PARAM_STR);
+        } else {
+            $stmt = $this->connection->prepare($query);
+        }
         $stmt->execute();
         return $stmt;
     }

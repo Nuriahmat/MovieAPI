@@ -12,8 +12,8 @@ $database = new Database();
 $db = $database->getConnection();
 
 $movie = new Movie($db);
-
-$stmt = $movie->list();
+$keyword = isset($_GET['search']) ? $_GET['search'] : '';
+$stmt = $movie->list($keyword);
 $count = $stmt->rowCount();
 
 if ($count > 0) {
