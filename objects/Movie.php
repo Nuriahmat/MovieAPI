@@ -2,7 +2,7 @@
 class Movie
 {
     private $connection;
-    private $db_name = 'movies';
+    private $tb_name = 'movies';
 
     public $id;
     public $name;
@@ -21,7 +21,7 @@ class Movie
      */
     public function list()
     {
-        $query = 'select * from ' . $this->db_name;
+        $query = 'select * from ' . $this->tb_name;
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -32,7 +32,7 @@ class Movie
      */
     public function listByFavorite()
     {
-        $query = 'select * from ' . $this->db_name . ' WHERE favorite=true';
+        $query = 'select * from ' . $this->tb_name . ' WHERE favorite=true';
         $stmt = $this->connection->prepare($query);
         $stmt->execute();
         return $stmt;
@@ -43,7 +43,7 @@ class Movie
      */
     public function getDetailByID()
     {
-        $query = 'select * from ' . $this->db_name . ' WHERE id=?';
+        $query = 'select * from ' . $this->tb_name . ' WHERE id=?';
         $stmt = $this->connection->prepare($query);
         $stmt->bindParam(1, $this->id);
         $stmt->execute();
@@ -51,5 +51,22 @@ class Movie
         $this->name = $row['name'];
         $this->favorite = $row['favorite'];
     }
+
+    /**
+     * Add favorite movie 
+     *
+     * @return void
+     */
+    public function addFavorite()
+    {
+        $query = 'update ' . $this->tb_name . ' set favorite=true where id=?';
+        $stmt = $this->connection->prepare($query);
+        $stmt->bindParam(1, $this->id);
+        if ($stmt->execute()) {
+            return true;
+        }
+        return false;
+    }
 }
+
 ?>
